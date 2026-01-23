@@ -15,7 +15,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Cucumber Java -->
@@ -23,14 +22,12 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>7.11.0</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>4.5.1</version>
-            <scope>test</scope>
         </dependency>
         <!-- C
         ucumber JUnit (runner for JUnit 4) -->
@@ -38,7 +35,6 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>7.11.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

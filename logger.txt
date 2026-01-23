@@ -26,3 +26,22 @@ Body:
     "website": "http://google.com",
     "language": "English_India"
 }
+HTTP/1.1 200 OK
+Date: Wed, 21 Jan 2026 11:08:21 GMT
+Server: Apache/2.4.52 (Ubuntu)
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: POST
+Access-Control-Max-Age: 3600
+Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With
+Content-Length: 194
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: application/json;charset=UTF-8
+
+{
+    "status": "OK",
+    "place_id": "fa3e5324daa8f42609389f70362bb026",
+    "scope": "APP",
+    "reference": "e803aaa9238083535de572710635bc3be803aaa9238083535de572710635bc3b",
+    "id": "e803aaa9238083535de572710635bc3b"
+}

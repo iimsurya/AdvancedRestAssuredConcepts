@@ -1,5 +1,6 @@
 package stepDefinitions;
 
+import Utils.JsonPathUtils;
 import contracts.APIResources;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -7,12 +8,14 @@ import io.cucumber.java.en.Then;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import pojo.AddPlace;
 import pojo.AddPlace_Location;
+import pojo.ResponseAddPlace;
 
 import java.io.*;
 
@@ -25,6 +28,7 @@ public class AddPlaceStepDef {
 
     public static RequestSpecification reqSpecBuilder;
     public static ResponseSpecification resSpecBuilder;
+    public static RequestSpecification request;
     public static Response response;
 
     @Given("User have valid request URI and Contract")
@@ -35,17 +39,23 @@ public class AddPlaceStepDef {
         reqSpecBuilder = new RequestSpecBuilder().setBaseUri("https://rahulshettyacademy.com")
                 .addHeader("Content-Type", "application/json")
                 .addFilter(RequestLoggingFilter.logRequestTo(stream))
+                .addFilter(ResponseLoggingFilter.logResponseTo(stream))
                 .addQueryParam("key", "qaclick123").build();
 
         resSpecBuilder = new ResponseSpecBuilder().expectStatusCode(200)
                 .expectBody("scope",equalTo("APP"))
                 .build();
+
+
+        AddPlace addPlace = getAddPlace();
+
+        request = given().spec(reqSpecBuilder).body(addPlace);
+
+
+
     }
 
-    @When("User hits {string} api using POST http method")
-    public static void user_hits_api_using_post_http_method(String resource)  {
-
-        APIResources resources = APIResources.valueOf(resource);
+    private static AddPlace getAddPlace() {
         AddPlace addPlace = new AddPlace();
         addPlace.setAccuracy(50);
         addPlace.setName("Google Head Office");
@@ -58,10 +68,18 @@ public class AddPlaceStepDef {
         addPlaceLocation.setLat("-38.383494");
         addPlaceLocation.setLng("39.383494");
         addPlace.setLocation(addPlaceLocation);
-         response = given().spec(reqSpecBuilder)
-                .body(addPlace)
-                .when().post(resources.getResource())
-                .then().spec(resSpecBuilder).extract().response();
+        return addPlace;
+    }
+
+    @When("User hits {string} api using {string} http method")
+    public static void user_hits_api_using_http_method(String resource, String method)  {
+
+        APIResources resources = APIResources.valueOf(resource);
+
+        if(method.equalsIgnoreCase("POST")) {
+            response = request.when().post(resources.getResource())
+                    .then().spec(resSpecBuilder).extract().response();
+        }
 
     }
     @Then("User wil get status code {string}")
@@ -76,9 +94,12 @@ public class AddPlaceStepDef {
 
         String responseString = response.asString();
 
+
+        ResponseAddPlace responseAddPlace = response.as(ResponseAddPlace.class);
+        System.out.println(responseAddPlace.getPlace_id());
         System.out.println(key);
-        JsonPath js = new JsonPath(responseString);
-        String actualValue = js.get(key);
+
+        String actualValue = JsonPathUtils.getJsonPathValue(response,key);
         System.out.println(actualValue);
         assertEquals(actualValue,value);
 
